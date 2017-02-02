@@ -14,6 +14,11 @@ app.use(function(req, res, next) {
 	next();
 });
 
+app.use('/route', function(req, res, next) {
+	console.log('route');
+	next();
+});
+
 var port = process.env.PORT || 3000;
 
 app.listen(port, function() {
