@@ -19,6 +19,10 @@ app.use('/route', function(req, res, next) {
 	next();
 });
 
+app.use('/route/:id', function(req, res, next) {
+	console.log('Params', req.params.id);
+	next();
+});
 var port = process.env.PORT || 3000;
 
 app.listen(port, function() {
