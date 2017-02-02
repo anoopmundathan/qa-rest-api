@@ -5,6 +5,7 @@ var app = express();
 
 app.use(function(req, res, next) {
 	req.myMessage = "Hello from First";
+	console.log(req.query.color);
 	console.log('First Middleware');
 	next();
 });
@@ -14,8 +15,8 @@ app.use(function(req, res, next) {
 	next();
 });
 
-app.use('/route', function(req, res, next) {
-	console.log('route');
+app.use('/:route', function(req, res, next) {
+	console.log('All routes', req.params.route);
 	next();
 });
 
@@ -23,6 +24,8 @@ app.use('/route/:id', function(req, res, next) {
 	console.log('Params', req.params.id);
 	next();
 });
+
+
 var port = process.env.PORT || 3000;
 
 app.listen(port, function() {
