@@ -17,7 +17,7 @@ db.once('open', function() {
 	var AnimalSchema = mongoose.Schema({
 		name: {
 			type: String, 
-			default: "Rat"
+			default: "Tiger"
 		}
 	});
 
@@ -25,31 +25,33 @@ db.once('open', function() {
 	var Animal = mongoose.model("Animal", AnimalSchema);
 
 	// Create Document
-	var lion = new Animal({name: "Anoop"});
-	var animal = new Animal({});
-	var whale = new Animal({
-		name: "whale"
-	});
+	var lion = new Animal({name: "Lion"});
+	var tiger = new Animal({});
+	var elephant = new  Animal({name: "Elephant"});
 
 	//Remove documents
 	Animal.remove({}, function(err) {
 		if (err) console.error("Save Failed", err);
+		// Save Lion
 		lion.save(function(err) {
 			if (err) console.error("Save Failed", err);
-			animal.save(function(err) {
+			// Save Tiger
+			tiger.save(function(err) {
 				if (err) console.error("Save Failed", err);
-				whale.save(function(err) {
+				//Save Elephant
+				elephant.save(function(err) {
 					if (err) console.error("Save Failed", err);
-					Animal.findAll(function(err, animals) {
-						console.log(animals);
-					});
-					db.close(function() {
-						console.log("Connection is closed");
-					});	
-				});
-			});
-		});
-	});
-
-	
+					//Query Animal
+					Animal.find(function(err, animals) {
+						animals.forEach(function(animal) {
+							console.log(animal.name);
+						});
+						db.close(function() {
+							console.log("Connection is closed");
+						});
+					}); // Animal.find
+				}); // elephant.save
+			}); // tiger.save
+		}); // lion.save
+	}); // Animal.remove
 });
