@@ -19,12 +19,18 @@ db.once('open', function() {
 			type: String, 
 			default: "Tiger"
 		},
-		isClever: String
+		isClever: String,
+		color: String
 	});
 
 	// Mongoose static methods
 	AnimalSchema.statics.findClever = function(callback) {
 		return this.find({isClever: "yes"}, callback);
+	};
+
+	// Mongoose instance methods
+	AnimalSchema.methods.findColor = function(callback) {
+		return this.model("Animal").find({color: this.color}, callback);
 	};
 
 	// Mongoose middleware hook
@@ -39,22 +45,31 @@ db.once('open', function() {
 	var Animal = mongoose.model("Animal", AnimalSchema);
 
 	// Create Document
-	var lion = new Animal({name: "Lion"});
+	var lion = new Animal({
+		name: "Lion",
+		color: "Grey"
+	});
 	var tiger = new Animal({});
-	var elephant = new  Animal({name: "Elephant"});
+	var elephant = new  Animal({
+		name: "Elephant",
+		color: "Black"
+	});
 
 	var animalData = [
 		lion,
 		tiger,
 		elephant,
 		{
-			name: "Giraff"
+			name: "Giraff",
+			color: "Grey"
 		},
 		{
-			name: "Fox"
+			name: "Fox",
+			color: "Orange"
 		},
 		{
-			name: "Hippo"
+			name: "Hippo",
+			color: "Grey"
 		}
 	];
 
@@ -65,14 +80,20 @@ db.once('open', function() {
 		Animal.create(animalData, function(err) {
 			if (err) console.error("Save Failed", err);
 			//Query Animal
-			Animal.findClever(function(err, animals) {
-				animals.forEach(function(animal) {
-					console.log(animal.name);
+
+			Animal.findOne({name: "Lion"}, function(err, animal) {
+				if(err) console.error("Error occured", err);
+				animal.findColor(function(err, animals) {
+					
+					animals.forEach(function(animal) {
+						console.log(animal.name);
+					});
+					
+					db.close(function() {
+						console.log("Connection is closed");
+					});
 				});
-				db.close(function() {
-					console.log("Connection is closed");
-				});
-			}); // Animal.find
+			});
 		}); //Animal.create
 	}); // Animal.remove
 
