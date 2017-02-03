@@ -2,21 +2,14 @@
 
 var express = require('express');
 var jsonParser = require('body-parser').json;
+var logger = require('morgan');
+var routes = require('./routes');
 
 var app = express();
 
-var jsonCheck = function(req, res, next) {
-	if(req.body) {
-		console.log('req.body is found');
-	} else {
-		console.log('req.body is not found');
-	}
-	next();
-}
-
-app.use(jsonCheck);
+app.use(logger('dev'));
 app.use(jsonParser());
-app.use(jsonCheck);
+app.use('/questions', routes);
 
 var port = process.env.PORT || 3000;
 
