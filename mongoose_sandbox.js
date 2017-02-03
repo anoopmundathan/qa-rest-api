@@ -29,29 +29,37 @@ db.once('open', function() {
 	var tiger = new Animal({});
 	var elephant = new  Animal({name: "Elephant"});
 
+	var animalData = [
+		lion,
+		tiger,
+		elephant,
+		{
+			name: "Giraff"
+		},
+		{
+			name: "Fox"
+		},
+		{
+			name: "Hippo"
+		}
+	];
+
 	//Remove documents
 	Animal.remove({}, function(err) {
 		if (err) console.error("Save Failed", err);
-		// Save Lion
-		lion.save(function(err) {
+		
+		Animal.create(animalData, function(err) {
 			if (err) console.error("Save Failed", err);
-			// Save Tiger
-			tiger.save(function(err) {
-				if (err) console.error("Save Failed", err);
-				//Save Elephant
-				elephant.save(function(err) {
-					if (err) console.error("Save Failed", err);
-					//Query Animal
-					Animal.find(function(err, animals) {
-						animals.forEach(function(animal) {
-							console.log(animal.name);
-						});
-						db.close(function() {
-							console.log("Connection is closed");
-						});
-					}); // Animal.find
-				}); // elephant.save
-			}); // tiger.save
-		}); // lion.save
+			//Query Animal
+			Animal.find(function(err, animals) {
+				animals.forEach(function(animal) {
+					console.log(animal.name);
+				});
+				db.close(function() {
+					console.log("Connection is closed");
+				});
+			}); // Animal.find
+		}); // Animal.create
 	}); // Animal.remove
+
 });
