@@ -22,6 +22,11 @@ db.once('open', function() {
 		isClever: String
 	});
 
+	// Mongoose static methods
+	AnimalSchema.statics.findClever = function(callback) {
+		return this.find({isClever: "yes"}, callback);
+	};
+
 	// Mongoose middleware hook
 	AnimalSchema.pre('save', function(next) {
 		if (this.name === 'Fox') {
@@ -60,7 +65,7 @@ db.once('open', function() {
 		Animal.create(animalData, function(err) {
 			if (err) console.error("Save Failed", err);
 			//Query Animal
-			Animal.find(function(err, animals) {
+			Animal.findClever(function(err, animals) {
 				animals.forEach(function(animal) {
 					console.log(animal.name);
 				});
