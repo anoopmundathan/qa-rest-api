@@ -18,7 +18,16 @@ db.once('open', function() {
 		name: {
 			type: String, 
 			default: "Tiger"
+		},
+		isClever: String
+	});
+
+	// Mongoose middleware hook
+	AnimalSchema.pre('save', function(next) {
+		if (this.name === 'Fox') {
+			this.isClever = "yes";
 		}
+		next();
 	});
 
 	// Create Model
@@ -59,7 +68,7 @@ db.once('open', function() {
 					console.log("Connection is closed");
 				});
 			}); // Animal.find
-		}); // Animal.create
+		}); //Animal.create
 	}); // Animal.remove
 
 });
