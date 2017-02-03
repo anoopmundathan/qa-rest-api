@@ -63,7 +63,16 @@ router.delete('/:qID/answers/:aID', function(req, res) {
 // POST /questions/:qId/answers/:aId/voute-up
 // POST /questions/:qId/answers/:aId/voute-down
 // Vote specific answer
-router.post('/:qID/answers/:aID/vote-:dir', function(req, res) {
+router.post('/:qID/answers/:aID/vote-:dir', function(req, res, next) {
+		if(req.params.dir.search(/^(up|down)$/) === -1) {
+			var err = new Error("Not Found Vote");
+			err.status = 404;
+			next(err);
+		} else {
+			next();
+		}
+	}, function(req, res) {
+
 	res.json({
 		response: "POST request for /questions/qID/answers/aID/vote " + req.params.dir,
 		questionId: req.params.qID,
