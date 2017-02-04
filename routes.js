@@ -1,21 +1,24 @@
 'use strict';
 
 var express = require('express');
-
+var Question = require('./model').Question;
 var router = express.Router();
 
 //GET /questions
 router.get('/', function(req, res) {
-	res.json({
-		response: "GET request"
+	Question.find({}, function(err, questions) {
+		if(err) return next(err);
+		res.json(questions);
 	});
 });
 
 //POST /questions
 router.post('/', function(req, res) {
-	res.json({
-		response: "POST request",
-		body: req.body
+	var question = new Question(req.body);
+	question.save(function(err, question) {
+		if(err) return next(err);
+		res.status(201);
+		res.json(question);
 	});
 });
 
