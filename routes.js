@@ -41,7 +41,7 @@ router.post('/', function(req, res) {
 
 // GET /questions/:id
 // Route for specific question
-router.get('/:qID', function(req, res, err) {
+router.get('/:qID', function(req, res) {
 	res.json(req.question);
 });
 
@@ -49,10 +49,11 @@ router.get('/:qID', function(req, res, err) {
 // POST /questions/:id/answers
 // Route for creating an answer
 router.post('/:qID/answers', function(req, res) {
-	res.json({
-		response: "POST request for /answers",
-		questionId: req.params.qID,
-		body: req.body
+	req.question.answers.push(req.body);
+	req.question.save(function(err, question) {
+		if(err) return next(err);
+		res.status(201);
+		res.json(question);
 	});
 });
 
