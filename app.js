@@ -1,15 +1,24 @@
 'use strict';
 
 var express = require('express');
-var jsonParser = require('body-parser').json;
+var bodyParser = require('body-parser');
 var logger = require('morgan');
 var routes = require('./routes');
 var mongoose = require('mongoose');
 
 var app = express();
 
+/* Serve static content using express middleware*/
+app.use(express.static(__dirname + '/public'));
+
 app.use(logger('dev'));
-app.use(jsonParser());
+
+// parse application/x-www-form-urlencoded 
+app.use(bodyParser.urlencoded({ extended: false }));
+
+// parse application/json 
+app.use(bodyParser.json());
+
 
 mongoose.connect("mongodb://localhost:27017/qa");
 var db = mongoose.connection;

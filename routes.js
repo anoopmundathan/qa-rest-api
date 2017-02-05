@@ -1,7 +1,7 @@
 'use strict';
 
 var express = require('express');
-var Question = require('./model').Question;
+var Question = require('./models').Question;
 var router = express.Router();
 
 //GET /questions
@@ -14,6 +14,7 @@ router.get('/', function(req, res) {
 
 //POST /questions
 router.post('/', function(req, res) {
+	
 	var question = new Question(req.body);
 	question.save(function(err, question) {
 		if(err) return next(err);
