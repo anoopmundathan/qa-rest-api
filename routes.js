@@ -6,7 +6,7 @@ var router = express.Router();
 
 //GET /questions
 router.get('/', function(req, res) {
-	Question.find({}, function(err, questions) {
+	Question.find({}, null, {sort: {createAt: -1}}, function(err, questions) {
 		if(err) return next(err);
 		res.json(questions);
 	});
