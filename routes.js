@@ -18,6 +18,16 @@ router.param("qID", function(req, res, next, id) {
 	});
 });
 
+router.param("aID", function(req, res, next, id) {
+	req.answer = req.question.answers.id(id);
+	if(!req.answer) {
+			err = new Error('Not Found');
+			err.status = 404;
+			next(err);
+	}
+	next();
+});
+
 //GET /questions
 router.get('/', function(req, res, next) {
 	Question.find({})
@@ -61,42 +71,45 @@ router.post('/:qID/answers', function(req, res) {
 // PUT /questions/:qId/answers/:aId
 // Edit an answer
 router.put('/:qID/answers/:aID', function(req, res) {
-	res.json({
-		response: "PUT request for questions/qID/answers/aID",
-		questionId: req.params.qID,
-		answerId: req.params.aID,
-		body: req.body
+	// Instance method
+	req.answer.update(req.body, function(err, result) {
+		if(err) return next(err);
+		res.json(result);
 	});
 });
 
 // DELETE /questions/:qId/answers/:aId
 // DELETE an answer
 router.delete('/:qID/answers/:aID', function(req, res) {
-	res.json({
-		response: "DELETE request for /questions/qID/answers/aID",
-		questionId: req.params.qID,
-		answerId: req.params.aID
+	req.answer.remove(function(err) {
+		req.question.save(function(err, question) {
+			if(err) return next(err);
+			res.json(question);
+		});
 	});
 });
 
 // POST /questions/:qId/answers/:aId/voute-up
 // POST /questions/:qId/answers/:aId/voute-down
 // Vote specific answer
-router.post('/:qID/answers/:aID/vote-:dir', function(req, res, next) {
+router.post('/:qID/answers/:aID/vote-:dir', 
+
+	function(req, res, next) {
 		if(req.params.dir.search(/^(up|down)$/) === -1) {
 			var err = new Error("Not Found Vote");
 			err.status = 404;
 			next(err);
 		} else {
+			req.vote = req.params.dir;
 			next();
 		}
-	}, function(req, res) {
+	}, 
 
-	res.json({
-		response: "POST request for /questions/qID/answers/aID/vote " + req.params.dir,
-		questionId: req.params.qID,
-		answerId: req.params.aID,
-		vote: req.params.dir
+	function(req, res, next) {
+
+	req.answer.vote(req.vote, function(err, question) {
+		if(err) return next(err);
+		res.json(question);
 	});
 });
 
