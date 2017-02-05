@@ -5,7 +5,7 @@ var Question = require('./models').Question;
 var router = express.Router();
 
 //GET /questions
-router.get('/', function(req, res) {
+router.get('/', function(req, res, next) {
 	Question.find({})
 		.sort({createAt: -1})
 		.exec(function(err, questions) {
@@ -27,9 +27,10 @@ router.post('/', function(req, res) {
 
 // GET /questions/:id
 // Route for specific question
-router.get('/:qID', function(req, res) {
-	res.json({
-		response: "GET request for" + req.params.qID
+router.get('/:qID', function(req, res, err) {
+	Question.findById(req.params.qID, function(err, question) {
+		if(err) return next(err);
+		res.json(question);
 	});
 });
 
