@@ -31,6 +31,18 @@ db.once('open', function() {
 	console.log('Mongoose connection opened');
 });
 
+// CORS
+app.use(function(req, res, next) {
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+
+	if(req.method ==="OPTONS") {
+		res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE");
+		return res.status(200).json({});
+	}
+	next();
+});
+
 app.use('/questions', routes);
 
 // Send 404 if route is not found
