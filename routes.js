@@ -31,7 +31,7 @@ router.param("aID", function(req, res, next, id) {
 //GET /questions
 router.get('/', function(req, res, next) {
 	Question.find({})
-		.sort({createAt: -1})
+		.sort({createdAt: -1})
 		.exec(function(err, questions) {
 			if(err) return next(err);
 			res.json(questions);
